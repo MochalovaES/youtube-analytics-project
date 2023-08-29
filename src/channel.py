@@ -6,26 +6,22 @@ from googleapiclient.discovery import build
 
 class Channel:
     """Класс для ютуб-канала"""
-    api_key: str = os.getenv('youtube_API')
-    youtube = build('youtube', 'v3', developerKey=api_key)
 
-    def __init__(self, channel_id: str, obj_youtube = youtube) -> None:
+    def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.__channel_id = channel_id  # id канала
-        self.info = obj_youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+        info = self.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute()
 
-        self.title = self.info['items'][0]['snippet']['title']  #название канала
-        self.description = self.info['items'][0]['snippet']['description']  #описание канала
-        self.url = self.info['items'][0]['snippet']['thumbnails'] ['default']['url'] #ссылка на канал
-        self.subscriber = self.info['items'][0]['statistics']['subscriberCount']  #количество подписчиков
-        self.video_count = self.info['items'][0]['statistics']['videoCount']  #количество видео
-        self.view_count = self.info['items'][0]['statistics']['viewCount']  #общее количество просмотров
+        self.title = info['items'][0]['snippet']['title']  #название канала
+        self.description = info['items'][0]['snippet']['description']  #описание канала
+        self.url = info['items'][0]['snippet']['thumbnails'] ['default']['url'] #ссылка на канал
+        self.subscriber = info['items'][0]['statistics']['subscriberCount']  #количество подписчиков
+        self.video_count = info['items'][0]['statistics']['videoCount']  #количество видео
+        self.view_count = info['items'][0]['statistics']['viewCount']  #общее количество просмотров
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
-        api_key: str = os.getenv('youtube_API')
-        youtube = build('youtube', 'v3', developerKey=api_key)
-        info = youtube.channels().list(id=self.__channel_id, part='snippet,statistics').execute()
+        info = self.get_service().channels().list(id=self.__channel_id, part='snippet,statistics').execute()
         print(json.dumps(info, indent=2, ensure_ascii=False))
 
     @classmethod
@@ -33,7 +29,8 @@ class Channel:
         """
         Класс-метод, возвращающий объект для работы с YouTube API
         """
-        return cls.youtube
+        api_key: str = os.getenv('youtube_API')
+        return build('youtube', 'v3', developerKey=api_key)
 
     @property
     def channel_id(self):
@@ -46,4 +43,4 @@ class Channel:
         data = {'channel_id': self.channel_id, 'title': self.title, 'description': self.description, 'url': self.url,
                 'subscriber': self.subscriber, 'video_count': self.video_count, 'view_count': self.view_count}
         with open(file_name, 'w') as outfile:
-            json.dump(data, outfile)
+            json.dump(data, outfile, indent=2, ensure_ascii=False)
