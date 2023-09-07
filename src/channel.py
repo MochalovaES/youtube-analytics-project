@@ -61,7 +61,7 @@ class Channel:
         """
         return int(self.subscriber) <= int(other.subscriber)
 
-    def __eg__(self, other):
+    def __eq__(self, other):
         """
         Определяет поведение оператора сравнения '=='
         """
