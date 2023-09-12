@@ -25,7 +25,7 @@ class Video:
 
 
 class PLVideo(Video):
-    def __init__(self,id_video, id_playlist):
+    def __init__(self, id_video, id_playlist):
         super().__init__(id_video)
         self.id_playlist = id_playlist
         self.playlist_videos = youtube.playlistItems().list(playlistId=self.id_playlist,
