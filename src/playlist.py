@@ -1,9 +1,6 @@
-import json
 import os
 import datetime
-from src.video import Video
 import isodate
-from isodate import parse_duration
 from googleapiclient.discovery import build
 
 api_key: str = os.getenv('youtube_API')
