@@ -23,6 +23,7 @@ class Video:
             self.url_video = None
             self.view_count = None
             self.like_count = None
+
     def __str__(self):
         """
         Метод, возвращающий название видео
